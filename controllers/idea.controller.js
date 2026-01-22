@@ -22,6 +22,8 @@ const getIdea = async (req, res) => {
 
 const createIdea = async (req, res) => {
   try {
+    req.body.userCreatedBy = req.loggedInUser.email;
+    req.body.userUpdatedBy = req.loggedInUser.email;
     const idea = await Idea.create(req.body);
     const temp = req.body;
     temp["parentIdeaId"] = idea._id;
@@ -34,6 +36,7 @@ const createIdea = async (req, res) => {
 
 const updateIdea = async (req, res) => {
   try {
+    req.body.userUpdatedBy = req.loggedInUser.email;
     const { id } = req.params;
     // delete req.body.userCreatedBy; //TODO remove this code once auth is in place as usercreated and updated will be extracted from jwttoken
     let idea = await Idea.findByIdAndUpdate(id, req.body, {

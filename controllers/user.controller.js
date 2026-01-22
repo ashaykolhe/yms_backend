@@ -40,6 +40,8 @@ const createUser = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     req.body.password = hashedPassword;
+    req.body.userCreatedBy = req.loggedInUser.email;
+    req.body.userUpdatedBy = req.loggedInUser.email;
     const user = await User.create(req.body);
     return res.status(200).json(user);
   } catch (error) {
@@ -49,6 +51,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    req.body.userUpdatedBy = req.loggedInUser.email;
     const { id } = req.params;
 
     let user = await User.findByIdAndUpdate(id, req.body, {

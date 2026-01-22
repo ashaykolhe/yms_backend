@@ -22,6 +22,8 @@ const getVideo = async (req, res) => {
 
 const createVideo = async (req, res) => {
   try {
+    req.body.userCreatedBy = req.loggedInUser.email;
+    req.body.userUpdatedBy = req.loggedInUser.email;
     const video = await Video.create(req.body);
     const temp = req.body;
     temp["parentVideoId"] = video._id;
@@ -34,6 +36,8 @@ const createVideo = async (req, res) => {
 
 const updateVideo = async (req, res) => {
   try {
+    req.body.userCreatedBy = req.loggedInUser.email;
+    req.body.userUpdatedBy = req.loggedInUser.email;
     const { id } = req.params;
 
     let video = await Video.findByIdAndUpdate(id, req.body, {
